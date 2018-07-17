@@ -7,7 +7,6 @@
     "dev": "nodemon",
     "production": "pm2 start src/loader.js --watch --name todo-app",
     "stop": "pm2 stop all"
-
   },
   "keywords": [],
   "author": "",
