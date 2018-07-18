@@ -16,10 +16,21 @@ export const search = () => {
     }
 }
 
+// Apenas com redux-multi (Mas os problema dessa abordagem, é pq temos chamda assincronas)
+// então precisamos do thunk, pois ele tem um dispatch
+// export const add = description => {
+//     const request = axios.post(URL, { description })
+
+//     return [
+//         { type: 'TODO_ADDED', payload: request },
+//         search()
+//     ]
+// }
+
 export const add = description => {
-    const request = axios.post(URL, { description })
-    return {
-        type: 'TODO_ADDED',
-        payload: request
+    return dispatch => {
+        axios.post(URL, { description })
+            .then(res => dispatch({ type: 'TODO_ADDED', payload: res.data }))
+            .then(res => dispatch(search()))
     }
 }
