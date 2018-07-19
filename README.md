@@ -12,6 +12,7 @@ To run the frontend app:
 cd frontend
 npm i
 npm run dev
+access http://localhost:8080
 ```
 
 To run the frontend-with-redux app:
@@ -19,5 +20,6 @@ To run the frontend-with-redux app:
 cd frontend-with-redux
 npm i
 npm run dev
+access http://localhost:8080
 ```
 
