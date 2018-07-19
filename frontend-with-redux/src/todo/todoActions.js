@@ -8,11 +8,11 @@ export const changeDescription = event => ({
 })
 
 export const search = () => {
-    const request = axios.get(`${URL}?sort=-createdAt`)
-
-    return {
-        type: 'TODO_SEARCHED',
-        payload: request
+    return (dispatch, getState) => {
+        const description = getState().todo.description
+        const search = description ? `&description__regex=/${description}/` : ''
+        const request = axios.get(`${URL}?sort=-createdAt${search}`)
+            .then(res => dispatch({ type: 'TODO_SEARCHED', payload: res.data }))
     }
 }
 
@@ -30,7 +30,31 @@ export const search = () => {
 export const add = description => {
     return dispatch => {
         axios.post(URL, { description })
-            .then(res => dispatch({ type: 'TODO_ADDED', payload: res.data }))
+            .then(res => dispatch(clear()))
             .then(res => dispatch(search()))
     }
 }
+
+// Não retorna um type e nem um payload pq não precisa. Até por isso, ele não é considerado no reducers
+export const markAsDone = todo => {
+    return dispatch => {
+        axios.put(`${URL}/${todo._id}`, { ...todo, done: true })
+            .then(res => dispatch(search()))
+    }
+}
+
+export const markAsPending = todo => {
+    return dispatch => {
+        axios.put(`${URL}/${todo._id}`, { ...todo, done: false })
+            .then(res => dispatch(search()))
+    }
+}
+
+export const remove = todo => {
+    return dispatch => {
+        axios.delete(`${URL}/${todo._id}`)
+            .then(res => dispatch(search()))
+    }
+}
+
+export const clear = () => ([{ type: 'TODO_CLEAR' }, search()])
